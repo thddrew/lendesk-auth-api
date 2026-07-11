@@ -1,5 +1,5 @@
-import type { User } from "../../schemas/users.js";
-import { userSchema } from "../../schemas/users.js";
+import type { User } from "../schemas/users.js";
+import { userSchema } from "../schemas/users.js";
 import { redisClient } from "./redis.js";
 
 export const getUserByUsername = async (username: string) => {

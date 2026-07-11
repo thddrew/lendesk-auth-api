@@ -12,7 +12,7 @@ export class BaseError extends Error {
 }
 
 export class AuthError extends BaseError {
-  constructor(message: string) {
+  constructor(message: string = "Unauthorized") {
     super(401, message);
   }
 }

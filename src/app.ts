@@ -5,16 +5,17 @@ import { protectedRoutes } from "./routes/protected.js";
 import { logger } from "hono/logger";
 import { errorLogger } from "./utils/errors/logger.js";
 
-const app = new Hono();
+// Chained
+const initApp = new Hono()
+  .use(logger())
+  // Default CORS config, but should customize for your deployment environment
+  .use("*", cors())
+  .notFound((c) => c.json({ error: "Resource Not Found" }, 404))
+  .onError(errorLogger);
 
-app.use(logger());
-// Default CORS config, but should customize for your deployment environment
-app.use("*", cors());
+const routes = initApp
+  .get("/healthcheck", (c) => c.json({ status: "ok" }))
+  .route("/auth", authRoutes)
+  .route("/v1", protectedRoutes);
 
-app.route("/auth", authRoutes);
-app.route("/app", protectedRoutes);
-
-app.notFound((c) => c.json({ error: "Resource Not Found" }, 404));
-app.onError(errorLogger);
-
-export { app };
+export { routes as app };

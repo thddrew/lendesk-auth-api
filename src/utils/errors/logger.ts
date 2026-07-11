@@ -3,6 +3,7 @@ import { BaseError } from "./BaseError.js";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 export const errorLogger: ErrorHandler = (err, c) => {
+  console.error(err);
   let statusCode: ContentfulStatusCode = 500;
   let message = "An internal server error occurred";
   let type = "Internal Server Error";

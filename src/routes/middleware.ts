@@ -1,7 +1,8 @@
 import { basicAuth } from "hono/basic-auth";
-import { verifyPassword } from "../../services/auth.js";
-import { sessionUserSchema } from "../../schemas/users.js";
+import { verifyPassword } from "../services/auth.js";
+import { sessionUserSchema } from "../schemas/users.js";
 import { getUserByUsername } from "../db/users.js";
+import { AuthError } from "../utils/errors/BaseError.js";
 
 /**
  * Basic authentication middleware for protecting routes
@@ -13,9 +14,8 @@ export const basicAuthMiddleware = basicAuth({
     const user = await getUserByUsername(username);
     if (!user) return false;
 
-    const isValid = await verifyPassword(password, user.hashedPassword);
-
-    if (isValid) {
+    const isVerified = await verifyPassword(password, user.hashedPassword);
+    if (isVerified) {
       const sanitizedUser = sessionUserSchema.parse(user);
       ctx.set("user", sanitizedUser);
       return true;
@@ -23,5 +23,7 @@ export const basicAuthMiddleware = basicAuth({
 
     return false;
   },
-  invalidUserMessage: "Invalid username or password",
+  invalidUserMessage: (ctx) => {
+    throw new AuthError();
+  },
 });
