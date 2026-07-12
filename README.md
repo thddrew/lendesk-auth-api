@@ -60,7 +60,7 @@ Unit tests are colocated with their target functions and integration tests are i
 
 We use a separate logical database in redis for our tests (defined in `.env`).
 
-### Post implementation thoughts
+### Retro thoughts
 
 - I don't particularly like having the name `v1` for only the protected routes. It should be the top level route so that if our auth implementation changes, we can keep backwards compat. (Did not get to this change)
 - Not all tests were created, just an example of a unit and integration test
