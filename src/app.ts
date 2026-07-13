@@ -4,6 +4,7 @@ import { authRoutes } from "./routes/auth.js";
 import { protectedRoutes } from "./routes/protected.js";
 import { logger } from "hono/logger";
 import { errorLogger } from "./utils/errors/logger.js";
+import { redisClient } from "./db/redis.js";
 
 // Chained
 const initApp = new Hono()
@@ -14,7 +15,13 @@ const initApp = new Hono()
   .onError(errorLogger);
 
 const routes = initApp
-  .get("/healthcheck", (c) => c.json({ status: "ok" }))
+  .get("/healthcheck", async (c) => {
+    const db = await redisClient.ping();
+    return c.json({
+      db: db ? "ok" : "failed",
+      status: "ok",
+    });
+  })
   .route("/auth", authRoutes)
   .route("/v1", protectedRoutes);
 

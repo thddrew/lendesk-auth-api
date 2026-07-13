@@ -28,11 +28,14 @@ class RedisClient {
       });
 
       await this.#client.connect();
-      await this.#client.ping();
     } catch (err) {
       this.#cleanUp(err);
       throw err;
     }
+  };
+
+  ping = async () => {
+    return this.#requireClient().ping();
   };
 
   close = async () => {

@@ -4,13 +4,13 @@ import { app } from "../../src/app";
 
 describe("API initialization", async () => {
   describe("GET /healthcheck", async () => {
-    it("should return a 200 status code and 'ok' JSON response", async () => {
+    it("should return a 200 status code and 'ok' JSON response with db status", async () => {
       const client = testClient(app);
 
       const res = await client.healthcheck.$get();
 
       expect(res.status).toBe(200);
-      expect(await res.json()).toEqual({ status: "ok" });
+      expect(await res.json()).toEqual({ db: "ok", status: "ok" });
     });
   });
 
