@@ -24,6 +24,7 @@ export const basicAuthMiddleware = basicAuth({
     return false;
   },
   invalidUserMessage: (ctx) => {
+    // Throwing a custom error to override the default middleware error response
     throw new AuthError();
   },
 });

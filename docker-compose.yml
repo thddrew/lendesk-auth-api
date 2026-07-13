@@ -1,0 +1,19 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://cache:7777
+      - REDIS_URL_TEST=redis://cache:7777/1
+    volumes:
+      - .:/src
+      - /src/node_modules
+    depends_on:
+      - cache
+
+  cache:
+    image: redis:8.8-alpine
+    command: redis-server --port 7777 --save "" --appendonly no
+    ports:
+      - "7777:7777"

@@ -1,11 +1,7 @@
 import { testClient } from "hono/testing";
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import { app } from "../../src/app";
-import {
-  convertToBasicAuthHeader,
-  getTestUserAuthHeader,
-  seedTestUser,
-} from "../utils/seed";
+import { getTestUserAuthHeader, seedTestUser } from "../utils/seed";
 
 describe("Authentication", async () => {
   beforeAll(async () => {

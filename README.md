@@ -4,19 +4,50 @@ This is a demo of a Basic Authentication API service built on Hono.js.
 
 ### Running the API
 
-Start a local redis instance and update the `env` file with the endpoint (or use a cloud redis instance)
+You can run the API in two ways with the simplest being starting the Docker Compose services.
 
-```bun
-// we can use redis-server for local instance
+**Option A — Docker Compose**
+
+```bash
+docker compose up --build
+```
+
+The API is at `http://localhost:3000`. Redis runs on port `7777` inside Compose (`cache` service). Compose sets `REDIS_URL=redis://cache:7777` for the API container.
+
+**Option B — Local development**
+
+To run locally, you'll need:
+
+- `bun` package manager
+- a local redis instance. We'll use `redis-server` here.
+
+Start Redis locally:
+
+```bash
 redis-server
 ```
 
-Start the API
+For the demo, we use a purely in-memory instance so no snapshots and no append-only logs.
 
-```bun
-bun install
-bun dev
+```bash
+redis-server --save "" --appendonly no
 ```
+
+Create a `.env` defining your local redis urls
+
+```env
+REDIS_URL=redis://localhost:6379
+REDIS_URL_TEST=redis://localhost:6379/1
+```
+
+Then:
+
+```bash
+bun install
+bun run dev
+```
+
+`REDIS_URL` is used by the running API. `REDIS_URL_TEST` points at Redis logical database `1` so integration tests stay isolated from app data on database `0`.
 
 ### Architecture
 
@@ -51,8 +82,7 @@ The default Error class is extended so that we can differentiate the types of er
 
 Vitest and Hono makes testing pretty simple especially with its type-safe test client (with the caveat being you have to chain the routes directly on the Hono instance).
 
-```bun
-// Start vitest in watch mode
+```bash
 bun run test
 ```
 
@@ -67,15 +97,13 @@ We use a separate logical database in redis for our tests (defined in `.env`).
 - I'd like to add rate limiting to ensure our resources don't get flooded
 - migrate to HSET if user object becomes more complex and we need to avoid full read/writes
 
-### How I used AI for this project
+### How I use AI (and what I did for this assignment)
 
-I treated this as a bit of coding test for myself so I handwrote 99% of the code, but that's not to say I did not use AI at all. This time it was more of an assistant doing things such as:
+On my regular day to day, I do use a lot of AI agents to plan, delegate, and review. I treated this as a bit of coding test for myself so I wrote most of the code. This time, I used as AI as more of an assistant for things such as:
 
-- used to validate my high level ideas and ask about risks eg. designing architecture of Redis class
-- asking for deep implementation details (this is fun but often times leads me down a rabbit hole)
+- used to validate my high level ideas and ask about risks eg. designing architecture of Redis class, security around how we use passwords
+- asking for deep implementation details
 - writing regex...
 - completing some of the test cases after I've scaffolded and created some as examples
-- code reviews
-- make and push to my git repo
-
-This README was not made by AI.
+- setting up infra code such as docker
+- debugging, code reviews, git management
