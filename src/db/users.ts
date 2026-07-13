@@ -18,5 +18,8 @@ export const setUser = async (user: User) => {
   return redisClient.set(
     userKey(validUser.username),
     JSON.stringify(validUser),
+    {
+      condition: "NX",
+    },
   );
 };

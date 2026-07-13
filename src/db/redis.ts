@@ -2,6 +2,7 @@ import {
   createClient,
   type RedisClientType,
   type RedisClientOptions,
+  type SetOptions,
 } from "redis";
 
 import { logger } from "../log.js";
@@ -65,10 +66,10 @@ class RedisClient {
     return client.get(key);
   };
 
-  set = async (key: string, value: string) => {
+  set = async (key: string, value: string, options?: SetOptions) => {
     const client = this.#requireClient();
 
-    return client.set(key, value);
+    return client.set(key, value, options);
   };
 }
 
