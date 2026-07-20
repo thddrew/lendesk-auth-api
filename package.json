@@ -5,7 +5,7 @@
     "dev": "dotenvx run -- bun --watch src/index.ts",
     "build": "tsc",
     "lint": "tsc --noEmit",
-    "test": "vitest"
+    "test": "dotenvx run -- vitest"
   },
   "dependencies": {
     "@hono/node-server": "2.0.8",
